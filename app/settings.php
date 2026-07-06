@@ -21,6 +21,11 @@ return function (ContainerBuilder $containerBuilder) {
                     'path' => isset($_ENV['docker']) ? 'php://stdout' : __DIR__ . '/../logs/app.log',
                     'level' => Logger::DEBUG,
                 ],
+                'twig' => [
+                    'templates' => __DIR__ . '/../templates',
+                    'cache' => isset($_ENV['docker']) ? false : __DIR__ . '/../var/cache/twig',
+                    'debug' => true,
+                ],
             ]);
         }
     ]);
