@@ -1,0 +1,164 @@
+{% extends 'layout.html.twig' %}
+
+{% block title %}
+    {%- if mixed %}Все таблицы
+    {%- elseif custom %}Таблицы × {{ selected|join(', ') }}
+    {%- else %}Таблица × {{ multiplier }}
+    {%- endif %} — Roulette Training
+{% endblock %}
+
+{% block content %}
+
+    <div class="table-header">
+        <a href="{{ custom ? '/multiplications-table/select' : '/' }}" class="btn btn-outline btn-sm">← Назад</a>
+        {% if mixed %}
+            <span class="badge badge-accent">Все таблицы</span>
+        {% elseif custom %}
+            {% for m in selected %}
+                <span class="badge badge-accent">× {{ m }}</span>
+            {% endfor %}
+        {% else %}
+            <span class="badge badge-accent">Таблица × {{ multiplier }}</span>
+        {% endif %}
+    </div>
+
+    {% if result is defined %}
+        <div class="card result-card {% if result.correct %}result-correct{% else %}result-wrong{% endif %}">
+            {% if result.correct %}
+                <span class="result-icon">✓</span>
+                <span class="result-text">
+                    Верно! {{ result.multiplier }} × {{ result.secondTerm }} = {{ result.expected }}
+                </span>
+            {% else %}
+                <span class="result-icon">✗</span>
+                <span class="result-text">
+                    Неверно. Ты ответил <strong>{{ result.userAnswer }}</strong>,
+                    правильный ответ — <strong>{{ result.expected }}</strong>
+                    ({{ result.multiplier }} × {{ result.secondTerm }})
+                </span>
+            {% endif %}
+        </div>
+    {% endif %}
+
+    <div class="card question-card">
+        <div class="question">
+            {{ question.firstTerm }} × {{ question.secondTerm }} = ?
+        </div>
+
+        <form method="post"
+              action="{% if mixed %}/multiplications-table{% elseif custom %}/multiplications-table/custom?{{ selected|map(m => 't[]=' ~ m)|join('&') }}{% else %}/multiplications-table/{{ multiplier }}{% endif %}"
+              class="answer-form">
+
+            {% if mixed or custom %}
+                <input type="hidden" name="first_term" value="{{ question.firstTerm }}">
+            {% endif %}
+
+            <input type="hidden" name="second_term" value="{{ question.secondTerm }}">
+
+            <input
+                type="number"
+                name="answer"
+                class="answer-input"
+                placeholder="Ответ"
+                autofocus
+                autocomplete="off"
+                required
+            >
+
+            <button type="submit" class="btn btn-primary">Проверить</button>
+        </form>
+    </div>
+
+{% endblock %}
+
+{% block head %}
+<style>
+    .table-header {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 24px;
+        flex-wrap: wrap;
+    }
+
+    .btn-sm {
+        padding: 6px 14px;
+        font-size: 0.8rem;
+    }
+
+    .question-card {
+        margin-top: 12px;
+    }
+
+    .question {
+        font-size: 3.5rem;
+        font-weight: 600;
+        text-align: center;
+        color: var(--color-text);
+        padding: 32px 0 28px;
+        font-variant-numeric: tabular-nums;
+        letter-spacing: -0.02em;
+    }
+
+    .answer-form {
+        display: flex;
+        gap: 12px;
+        justify-content: center;
+        padding-bottom: 16px;
+    }
+
+    .answer-input {
+        width: 150px;
+        padding: 10px 16px;
+        font-size: 1.25rem;
+        text-align: center;
+        background: var(--color-bg);
+        border: 1px solid var(--color-border);
+        border-radius: var(--radius);
+        color: var(--color-text);
+        outline: none;
+        transition: border-color var(--transition);
+    }
+
+    .answer-input:focus {
+        border-color: var(--color-accent);
+    }
+
+    .answer-input::-webkit-inner-spin-button,
+    .answer-input::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+    }
+
+    .result-card {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 12px;
+    }
+
+    .result-correct {
+        border-color: #2e7d32;
+        background: rgba(46, 125, 50, 0.08);
+    }
+
+    .result-wrong {
+        border-color: #c0392b;
+        background: rgba(192, 57, 43, 0.08);
+    }
+
+    .result-icon {
+        font-size: 1.5rem;
+        font-weight: 700;
+        line-height: 1;
+        flex-shrink: 0;
+    }
+
+    .result-correct .result-icon { color: #4caf50; }
+    .result-wrong   .result-icon { color: #e57373; }
+
+    .result-text {
+        font-size: 0.9rem;
+        color: var(--color-text);
+    }
+</style>
+{% endblock %}

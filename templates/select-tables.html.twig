@@ -1,0 +1,111 @@
+{% extends 'layout.html.twig' %}
+
+{% block title %}Выбор таблиц — Roulette Training{% endblock %}
+
+{% block content %}
+
+    <div class="table-header">
+        <a href="/" class="btn btn-outline btn-sm">← Назад</a>
+        <span class="badge badge-accent">Выбор таблиц</span>
+    </div>
+
+    <div class="card">
+        <h2>Выберите таблицы для тренировки</h2>
+        <p>Отметьте одну или несколько таблиц и нажмите «Начать».</p>
+
+        <form method="post" action="/multiplications-table/select" class="select-form">
+            <div class="checkbox-group">
+                {% for multiplier in available %}
+                    <label class="checkbox-item">
+                        <input type="checkbox" name="t[]" value="{{ multiplier }}">
+                        <span class="checkbox-label">× {{ multiplier }}</span>
+                    </label>
+                {% endfor %}
+            </div>
+
+            <div class="select-actions">
+                <button type="button" class="btn btn-outline btn-sm" id="select-all">Выбрать все</button>
+                <button type="button" class="btn btn-outline btn-sm" id="deselect-all">Снять все</button>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-start">Начать тренировку</button>
+        </form>
+    </div>
+
+{% endblock %}
+
+{% block head %}
+<style>
+    .card h2 { margin-bottom: 6px; }
+
+    .select-form {
+        margin-top: 24px;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .checkbox-group {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+
+    .checkbox-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 14px 20px;
+        border: 1px solid var(--color-border);
+        border-radius: var(--radius);
+        cursor: pointer;
+        transition: border-color var(--transition), background var(--transition);
+        user-select: none;
+    }
+
+    .checkbox-item:hover {
+        border-color: var(--color-accent);
+        background: rgba(201, 168, 76, 0.05);
+    }
+
+    .checkbox-item input[type="checkbox"] {
+        width: 18px;
+        height: 18px;
+        accent-color: var(--color-accent);
+        cursor: pointer;
+        flex-shrink: 0;
+    }
+
+    .checkbox-item:has(input:checked) {
+        border-color: var(--color-accent);
+        background: rgba(201, 168, 76, 0.1);
+    }
+
+    .checkbox-label {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: var(--color-text);
+        min-width: 40px;
+    }
+
+    .select-actions {
+        display: flex;
+        gap: 8px;
+    }
+
+    .btn-start {
+        align-self: flex-start;
+        padding: 12px 28px;
+        font-size: 1rem;
+    }
+</style>
+
+<script>
+    document.getElementById('select-all').addEventListener('click', () => {
+        document.querySelectorAll('.checkbox-item input').forEach(cb => cb.checked = true);
+    });
+    document.getElementById('deselect-all').addEventListener('click', () => {
+        document.querySelectorAll('.checkbox-item input').forEach(cb => cb.checked = false);
+    });
+</script>
+{% endblock %}
