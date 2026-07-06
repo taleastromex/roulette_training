@@ -1,0 +1,50 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Application\Actions\MultiplicationsTesting;
+
+use App\Application\Actions\Action;
+use App\Domain\MultiplicationsTesting\MultiplicationsTesting;
+use App\Domain\MultiplicationsTesting\MultiplicationsTestingRepository;
+use Psr\Http\Message\ResponseInterface as Response;
+use Psr\Log\LoggerInterface;
+use Slim\Views\Twig;
+
+class MixedMultiplicationsTableCheckAction extends Action
+{
+    public function __construct(
+        LoggerInterface $logger,
+        private Twig $twig,
+        private MultiplicationsTestingRepository $repository
+    ) {
+        parent::__construct($logger);
+    }
+
+    protected function action(): Response
+    {
+        $body       = (array) $this->getFormData();
+        $firstTerm  = (int) ($body['first_term']  ?? 0);
+        $secondTerm = (int) ($body['second_term'] ?? 0);
+        $userAnswer = (int) ($body['answer']       ?? 0);
+
+        $question  = new MultiplicationsTesting($firstTerm, $secondTerm);
+        $isCorrect = $question->isCorrectAnswer($userAnswer);
+
+        $next = $this->repository->generateRandomFromAll();
+
+        return $this->twig
+            ->render($this->response, 'multiplications-table.html.twig', [
+                'mixed'    => true,
+                'question' => $next,
+                'result'   => [
+                    'multiplier' => $firstTerm,
+                    'secondTerm' => $secondTerm,
+                    'userAnswer' => $userAnswer,
+                    'correct'    => $isCorrect,
+                    'expected'   => $question->getAnswer(),
+                ],
+            ])
+            ->withHeader('Content-Type', 'text/html; charset=utf-8');
+    }
+}
