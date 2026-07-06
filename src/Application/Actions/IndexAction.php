@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace App\Application\Actions;
 
@@ -17,17 +17,19 @@ class IndexAction extends Action
 
     protected function action(): Response
     {
-        return $this->twig->render(
-            $this->response,
-            'index.html.twig',
-            [
-                'testing_list' => [
-                    [
-                        'name' => 'Multiplications table testing',
-                        'slug' => 'multiplications-table',
-                    ]
+        return $this->twig
+            ->render(
+                $this->response,
+                'index.html.twig',
+                [
+                    'testing_list' => [
+                        [
+                            'name' => 'Multiplications table testing',
+                            'slug' => 'multiplications-table',
+                        ],
+                    ],
                 ]
-            ]
-        );
+            )
+            ->withHeader('Content-Type', 'text/html; charset=utf-8');
     }
 }
