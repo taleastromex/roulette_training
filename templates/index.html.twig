@@ -1,0 +1,16 @@
+{% extends 'layout.html.twig' %}
+
+{% block title %}Main Page{% endblock %}
+
+{% block content %}
+    <h1>Available trainings</h1>
+
+    <div>
+        <div>Select available testing:</div>
+        <ul>
+            {% for item in testing_list %}
+                <li><a href="/{{ item['slug'] }}">{{ item['name'] }}</a></li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endblock %}
