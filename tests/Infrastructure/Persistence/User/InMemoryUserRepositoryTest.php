@@ -30,7 +30,7 @@ class InMemoryUserRepositoryTest extends TestCase
             5 => new User(5, 'jack.dorsey', 'Jack', 'Dorsey'),
         ];
 
-        $userRepository = new InMemoryUserRepository();
+        $userRepository = new InMemoryUserRepository($users);
 
         $this->assertEquals(array_values($users), $userRepository->findAll());
     }
