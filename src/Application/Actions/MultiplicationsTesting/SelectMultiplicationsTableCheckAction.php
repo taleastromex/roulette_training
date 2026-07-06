@@ -15,7 +15,6 @@ class SelectMultiplicationsTableCheckAction extends Action
 {
     public function __construct(
         LoggerInterface $logger,
-        private Twig $twig,
         private MultiplicationsTestingRepository $repository
     ) {
         parent::__construct($logger);

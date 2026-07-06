@@ -11,7 +11,8 @@ class MultiplicationsTesting implements JsonSerializable
     public function __construct(
         private int $firstTerm,
         private int $secondTerm
-    ) {}
+    ) {
+    }
 
     public function getFirstTerm(): int
     {

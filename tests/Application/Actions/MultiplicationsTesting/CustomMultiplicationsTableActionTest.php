@@ -42,7 +42,7 @@ class CustomMultiplicationsTableActionTest extends TestCase
 
         $body = (string) $app->handle($request)->getBody();
 
-        $this->assertStringContainsString('× 5',  $body);
+        $this->assertStringContainsString('× 5', $body);
         $this->assertStringContainsString('× 17', $body);
     }
 
