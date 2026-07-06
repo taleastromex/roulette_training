@@ -1,18 +1,14 @@
-version: '3.7'
-
-volumes:
-    logs:
-        driver: local
+version: '3.8'
 
 services:
-    slim:
-        image: php:7-alpine
-        working_dir: /var/www
-        command: php -S 0.0.0.0:8080 -t public
-        environment:
-            docker: "true"
-        ports:
-            - "8080:8080"
-        volumes:
-            - .:/var/www
-            - logs:/var/www/logs
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      docker: "true"
+    volumes:
+      - .:/var/www
+      - /var/www/vendor
